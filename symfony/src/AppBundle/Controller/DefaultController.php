@@ -43,7 +43,7 @@ class DefaultController extends Controller
 				
 			if(count($validate_email) == 0 && $password != null){
 				
-				if($getHash == null){
+				if($getHash == null || $getHash == "false"){
 					//echo "Datos correctos\n";
 					$signup = $jwt_auth->signup($email, $pwd);
 					//$signup = $jwt_auth->signup($email, $password, "hash");

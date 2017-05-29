@@ -122,7 +122,7 @@ class UserController extends Controller {
 					$user->setName($name);
 					$user->setSurname($surname);
 
-					if($password != null){
+					if($password != null && !empty($password)){
 						// Cifrar la password
 						$pwd = hash('sha256', $password);
 						$user->setPassword($pwd);

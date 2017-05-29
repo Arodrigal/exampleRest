@@ -4,17 +4,17 @@ namespace AppBundle\Services;
 use Firebase\JWT\JWT;
 
 class JwtAuth {
-	
+
 	private $manager;
 	private $key;
-	
+
 	public function __construct($manager) {
 		$this->manager = $manager;
 		$this->key = "clave-secreta";
 	}
-	
+
 	public function signup($email, $password, $getHash = null){
-		
+
 		$user = $this->manager->getRepository('BackendBundle:User')->findOneBy(
 			array(
 				"email" => $email
@@ -23,22 +23,21 @@ class JwtAuth {
 		$existUser = false;
 		if(is_object($user)){
 			$existUser = true;
-			var_dump($password);
 		}
-		
+
 		$user = $this->manager->getRepository('BackendBundle:User')->findOneBy(
 			array(
 				"email" => $email,
 				"password" => $password
 			)
 		);
-		
+
 		if(is_object($user)){
 			$signup = true;
 		}else{
 			$signup = false;
 		}
-		
+
 		if($signup == true){
 			$token = array(
 				"sub" => $user->getId(),
@@ -50,16 +49,16 @@ class JwtAuth {
 				"iat" => time(),
 				"exp" => time() + (7 * 24 * 60 * 60),
 			);
-			
+
 			$jwt = JWT::encode($token, $this->key, 'HS256');
 			$decode = JWT::decode($jwt, $this->key, array('HS256'));
-			
+
 			if($getHash != null){
 				return $jwt;
 			}else{
 				return $decode;
 			}
-			
+
 			//return array("status" => "success", "data" => "Login success !!");
 		}else{
 			if($existUser){
@@ -69,24 +68,24 @@ class JwtAuth {
 			}
 		}
 	}
-	
+
 	public function checkToken($jwt, $getIdentity = false){
 		$auth = false;
-		
+
 		try{
 			$decoded = JWT::decode($jwt, $this->key, array('HS256'));
-		} catch (\UnexpectedValueException $ex) {
+		} catch (\UnexpectedValueException $e) {
 			$auth = false;
-		} catch (\DomainException $ex) {
+		} catch (\DomainException $e) {
 			$auth = false;
 		}
-		
+
 		if(isset($decoded->sub)){
 			$auth = true;
 		}else{
 			$auth = false;
 		}
-		
+
 		if($getIdentity == true){
 			return $decoded;
 		}else{

@@ -1,0 +1,11 @@
+#Cache symfony
+/symfony/var/
+!/symfony/var/cache
+/symfony/var/cache/
+!symfony/var/cache/.gitkeep
+!/symfony/var/logs
+/symfony/var/logs/
+!symfony/var/logs/.gitkeep
+!/symfony/var/sessions
+/symfony/var/sessions/
+!symfony/var/sessions/.gitkeep
