@@ -12,15 +12,19 @@
     <script src="node_modules/zone.js/dist/zone.js"></script>
     <script src="node_modules/reflect-metadata/Reflect.js"></script>
     <script src="node_modules/systemjs/dist/system.src.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script src="node_modules/bootstrap/dist/js/bootstrap.min.js"></script>
+
     <!-- 2. Configure SystemJS -->
     <script src="systemjs.config.js"></script>
     <script>
       System.import('app').catch(function(err){ console.error(err); });
     </script>
     <link rel="stylesheet" href="node_modules/bootstrap/dist/css/bootstrap.min.css" />
-    <link rel="stylesheet" href="assets/css/style.css" />
     <link rel="stylesheet" href="assets/css/lumen.bootstrap.css" />
+    <link rel="stylesheet" href="assets/css/style.css" />
   </head>
+
   <!-- 3. Display the application -->
   <body>
     <div class="container">

@@ -24,6 +24,24 @@ var LoginService = (function () {
         return this._http.post(this.url + "/login", params, { headers: headers })
             .map(function (res) { return res.json(); });
     };
+    LoginService.prototype.getIdentity = function () {
+        if (JSON.parse(localStorage.getItem('identity')) != "undefined") {
+            this.identity = JSON.parse(localStorage.getItem('identity'));
+        }
+        else {
+            this.identity = null;
+        }
+        return this.identity;
+    };
+    LoginService.prototype.getToken = function () {
+        if (localStorage.getItem('token') != "undefined") {
+            this.token = localStorage.getItem('token');
+        }
+        else {
+            this.token = null;
+        }
+        return this.token;
+    };
     LoginService = __decorate([
         core_1.Injectable(), 
         __metadata('design:paramtypes', [http_1.Http])
