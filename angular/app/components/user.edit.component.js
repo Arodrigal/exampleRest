@@ -12,23 +12,41 @@ var core_1 = require('@angular/core');
 var router_1 = require('@angular/router');
 var login_service_1 = require('../services/login.service');
 var user_1 = require('../model/user');
-var RegisterComponent = (function () {
-    function RegisterComponent(_loginService, _route, _router) {
+var UserEditComponent = (function () {
+    function UserEditComponent(_loginService, _route, _router) {
         this._loginService = _loginService;
         this._route = _route;
         this._router = _router;
-        this.titulo = "Registro";
+        this.titulo = "Actualizar mis datos";
     }
-    RegisterComponent.prototype.ngOnInit = function () {
-        this.user = new user_1.User(1, "user", "", "", "", "", "null");
+    UserEditComponent.prototype.ngOnInit = function () {
+        var identity = this._loginService.getIdentity();
+        this.identity = identity;
+        if (identity == null) {
+            this._router.navigate(["/index"]);
+        }
+        else {
+            this.user = new user_1.User(identity.sub, identity.role, identity.name, identity.surname, identity.email, identity.password, "null");
+        }
     };
-    RegisterComponent.prototype.onSubmit = function () {
+    UserEditComponent.prototype.onSubmit = function () {
         var _this = this;
-        this._loginService.register(this.user).subscribe(function (response) {
+        console.log(this.user);
+        this.newPwd = this.user.password;
+        if (this.user.password == this.identity.password) {
+            this.user.password = "";
+        }
+        this._loginService.updateUser(this.user).subscribe(function (response) {
             _this.status = response.status;
             if (_this.status != "Success") {
                 _this.status = "error";
                 console.log(response);
+            }
+            else {
+                if (_this.newPwd == _this.identity.password) {
+                    _this.user.password == _this.identity.password;
+                }
+                localStorage.setItem('identity', JSON.stringify(_this.user));
             }
         }, function (error) {
             _this.errorMessage = error;
@@ -38,16 +56,16 @@ var RegisterComponent = (function () {
             }
         });
     };
-    RegisterComponent = __decorate([
+    UserEditComponent = __decorate([
         core_1.Component({
-            selector: 'register',
-            templateUrl: 'app/view/register.html',
+            selector: 'user-edit',
+            templateUrl: 'app/view/user.edit.html',
             directives: [router_1.ROUTER_DIRECTIVES],
             providers: [login_service_1.LoginService]
         }), 
         __metadata('design:paramtypes', [login_service_1.LoginService, router_1.ActivatedRoute, router_1.Router])
-    ], RegisterComponent);
-    return RegisterComponent;
+    ], UserEditComponent);
+    return UserEditComponent;
 }());
-exports.RegisterComponent = RegisterComponent;
-//# sourceMappingURL=register.component.js.map
+exports.UserEditComponent = UserEditComponent;
+//# sourceMappingURL=user.edit.component.js.map

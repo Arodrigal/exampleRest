@@ -42,6 +42,20 @@ var LoginService = (function () {
         }
         return this.token;
     };
+    LoginService.prototype.register = function (userRegister) {
+        var json = JSON.stringify(userRegister);
+        var params = "json=" + json;
+        var headers = new http_1.Headers({ 'Content-Type': 'application/x-www-form-urlencoded' });
+        return this._http.post(this.url + "/user/new", params, { headers: headers })
+            .map(function (res) { return res.json(); });
+    };
+    LoginService.prototype.updateUser = function (userUpdate) {
+        var json = JSON.stringify(userUpdate);
+        var params = "json=" + json + "&authorization=" + this.getToken();
+        var headers = new http_1.Headers({ 'Content-Type': 'application/x-www-form-urlencoded' });
+        return this._http.post(this.url + "/user/edit", params, { headers: headers })
+            .map(function (res) { return res.json(); });
+    };
     LoginService = __decorate([
         core_1.Injectable(), 
         __metadata('design:paramtypes', [http_1.Http])

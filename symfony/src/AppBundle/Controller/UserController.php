@@ -82,14 +82,14 @@ class UserController extends Controller {
 		if ($authCheck == true) {
 
 			$identity = $helpers->authCheck($hash, true);
-			
+
 			$em = $this->getDoctrine()->getManager();
 			$user = $em->getRepository("BackendBundle:User")->findOneBy(
 				array(
 					"id" => $identity->sub
 				)
 			);
-			
+
 			$json = $request->get("json", null);
 			$params = json_decode($json);
 			$data = array(
@@ -114,7 +114,7 @@ class UserController extends Controller {
 
 				if ($email != null && count($validate_email) == 0 &&
 						$name != null && $surname != null) {
-					
+
 					$user->setCreatedAt($createdAt);
 					$user->setImage($image);
 					$user->setRole($role);
@@ -127,7 +127,7 @@ class UserController extends Controller {
 						$pwd = hash('sha256', $password);
 						$user->setPassword($pwd);
 					}
-					
+
 					$em = $this->getDoctrine()->getManager();
 					$isset_user = $em->getRepository("BackendBundle:User")->findBy(
 							array(
@@ -163,26 +163,26 @@ class UserController extends Controller {
 		}
 		return $helpers->json($data);
 	}
-	
+
 	public function uploadImageAction(Request $request){
 		$helpers = $this->get("app.helpers");
-		
+
 		$hash = $request->get("authorization", null);
 		$authCheck = $helpers->authCheck($hash);
-		
+
 		if($authCheck){
 			$identity = $helpers->authCheck($hash, true);
-			
+
 			$em = $this->getDoctrine()->getManager();
 			$user = $em->getRepository("BackendBundle:User")->findOneBy(
 				array(
 					"id" => $identity->sub
 				)
 			);
-			
+
 			// upload file
 			$file = $request->files->get("image");
-			
+
 			if(!empty($file) && $file != null){
 				$ext = $file->guessExtension();
 				if($ext == "jpeg" || $ext == "jpg" || $ext == "png" || $ext == "gif"){
@@ -212,7 +212,7 @@ class UserController extends Controller {
 					"msg" => "Image not uploaded"
 				);
 			}
-			
+
 		}else{
 			$data = array(
 				"status" => "Error",
@@ -220,13 +220,13 @@ class UserController extends Controller {
 				"msg" => "Authorization not valid"
 			);
 		}
-		
+
 		return $helpers->json($data);
 	}
-	
+
 	public function channelAction(Request $request, $id=null) {
 		$helpers = $this->get("app.helpers");
-		
+
 		$em = $this->getDoctrine()->getManager();
 
 		$user = $em->getRepository("BackendBundle:User")->findOneBy(
@@ -234,13 +234,13 @@ class UserController extends Controller {
 				"id" => $id
 			)
 		);
-				
+
 		if(count($user) == 1){
 			$dql = "SELECT v FROM BackendBundle:Video v "
 					. "WHERE v.user = $id "
 					. "ORDER BY v.id DESC";
 			$query = $em->createQuery($dql);
-		
+
 			$page = $request->query->getInt("page", 1);
 			$paginator = $this->get("knp_paginator");
 			$items_per_page = 6;
@@ -266,7 +266,7 @@ class UserController extends Controller {
 				"msg" => "User dont exist"
 			);
 		}
-		
+
 		return $helpers->json($data);
 	}
 }

@@ -11,7 +11,7 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 // Importar el núcleo de Angular
 var core_1 = require('@angular/core');
 var router_1 = require("@angular/router");
-var login_service_1 = require("./services/login.service");
+var login_service_1 = require('./services/login.service');
 // Decorador component, indicamos en que etiqueta se va a cargar la plantilla
 var AppComponent = (function () {
     function AppComponent(_loginService) {

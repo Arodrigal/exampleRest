@@ -30,6 +30,7 @@ export class LoginService{
     }
     return this.identity;
   }
+
   getToken(){
     if(localStorage.getItem('token') != "undefined"){
       this.token = localStorage.getItem('token');
@@ -37,5 +38,23 @@ export class LoginService{
       this.token = null;
     }
     return this.token;
+  }
+
+  register(userRegister){
+    let json = JSON.stringify(userRegister);
+    let params = "json="+json;
+    let headers = new Headers({'Content-Type':'application/x-www-form-urlencoded'});
+
+    return this._http.post(this.url+"/user/new", params, {headers: headers})
+        .map(res => res.json());
+  }
+
+  updateUser(userUpdate){
+    let json = JSON.stringify(userUpdate);
+    let params = "json="+json+"&authorization="+this.getToken();
+    let headers = new Headers({'Content-Type':'application/x-www-form-urlencoded'});
+
+    return this._http.post(this.url+"/user/edit", params, {headers: headers})
+        .map(res => res.json());
   }
 }
