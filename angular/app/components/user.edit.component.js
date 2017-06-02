@@ -11,10 +11,12 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 var core_1 = require('@angular/core');
 var router_1 = require('@angular/router');
 var login_service_1 = require('../services/login.service');
+var upload_service_1 = require('../services/upload.service');
 var user_1 = require('../model/user');
 var UserEditComponent = (function () {
-    function UserEditComponent(_loginService, _route, _router) {
+    function UserEditComponent(_loginService, _uploadService, _route, _router) {
         this._loginService = _loginService;
+        this._uploadService = _uploadService;
         this._route = _route;
         this._router = _router;
         this.titulo = "Actualizar mis datos";
@@ -31,7 +33,7 @@ var UserEditComponent = (function () {
     };
     UserEditComponent.prototype.onSubmit = function () {
         var _this = this;
-        console.log(this.user);
+        console.log("this.newPwd = " + this.user.password);
         this.newPwd = this.user.password;
         if (this.user.password == this.identity.password) {
             this.user.password = "";
@@ -44,7 +46,7 @@ var UserEditComponent = (function () {
             }
             else {
                 if (_this.newPwd == _this.identity.password) {
-                    _this.user.password == _this.identity.password;
+                    _this.user.password = _this.identity.password;
                 }
                 localStorage.setItem('identity', JSON.stringify(_this.user));
             }
@@ -56,14 +58,28 @@ var UserEditComponent = (function () {
             }
         });
     };
+    UserEditComponent.prototype.fileChangeEvent = function (fileInput) {
+        var _this = this;
+        console.log("Evento change lanzado");
+        this.filesToUpload = fileInput.target.files;
+        var token = this._loginService.getToken();
+        var url = "http://127.0.0.1:8888/cursoMS/symfony/web/app_dev.php/user/uploaded-image-user";
+        this._uploadService.makeFileRequest(token, url, ['image'], this.filesToUpload).then(function (result) {
+            _this.resultUpload = result;
+            console.log(_this.resultUpload);
+        }, function (error) {
+            alert("Error");
+            console.log(error);
+        });
+    };
     UserEditComponent = __decorate([
         core_1.Component({
             selector: 'user-edit',
             templateUrl: 'app/view/user.edit.html',
             directives: [router_1.ROUTER_DIRECTIVES],
-            providers: [login_service_1.LoginService]
+            providers: [login_service_1.LoginService, upload_service_1.UploadService]
         }), 
-        __metadata('design:paramtypes', [login_service_1.LoginService, router_1.ActivatedRoute, router_1.Router])
+        __metadata('design:paramtypes', [login_service_1.LoginService, upload_service_1.UploadService, router_1.ActivatedRoute, router_1.Router])
     ], UserEditComponent);
     return UserEditComponent;
 }());
