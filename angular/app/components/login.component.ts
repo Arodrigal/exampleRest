@@ -56,6 +56,7 @@ export class LoginComponent implements OnInit {
       response => {
         console.log('Obtenido respuesta');
         this.identity = response;
+        console.log('Respuesta ('+this.identity+')');
         //this.token = response;
         if(this.identity.length <=0){
           alert("Error en el servidor");

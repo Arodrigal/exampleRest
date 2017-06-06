@@ -46,6 +46,7 @@ var LoginComponent = (function () {
         this._loginService.signup(this.user).subscribe(function (response) {
             console.log('Obtenido respuesta');
             _this.identity = response;
+            console.log('Respuesta (' + _this.identity + ')');
             //this.token = response;
             if (_this.identity.length <= 0) {
                 alert("Error en el servidor");

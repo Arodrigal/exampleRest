@@ -15,12 +15,12 @@
       <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
         <ul class="nav navbar-nav">
           <li><a [routerLink]="['/index']">Home</a></li>
-          <li><a [routerLink]="['/index']" *ngIf="identity">Crear video</a></li>
+          <li><a [routerLink]="['/video-new']" *ngIf="identity">Crear video</a></li>
         </ul>
         <ul *ngIf="identity" class="nav navbar-nav navbar-right" id="credentials-top">
           <li>
             <a [routerLink]="['/index']" class="user-image">
-              <img src="http://127.0.0.1:8888/cursoMS/symfony/web/app_dev.php/user/{{identity.image}}" />
+              <img src="http://127.0.0.1:8888/cursoMS/symfony/web/uploads/users/{{identity.image}}" />
             </a>
           </li>
           <li class="dropdown">

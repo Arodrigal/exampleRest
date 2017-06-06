@@ -19,9 +19,9 @@ class VideoController extends Controller {
 
 		if ($authCheck == true) {
 			$identity = $helpers->authCheck($hash, true);
-			
+
 			$json = $request->get("json", null);
-			
+
 			if($json != null){
 				$params = json_decode($json);
 
@@ -34,10 +34,10 @@ class VideoController extends Controller {
 				$title = (isset($params->title)) ? $params->title : null;
 				$description = (isset($params->description)) ? $params->description : null;
 				$status = (isset($params->status)) ? $params->status : null;
-				
+
 				if($user_id != null && $title != null){
 					$em = $this->getDoctrine()->getManager();
-					
+
 					$user = $em->getRepository("BackendBundle:User")->findOneBy(
 						array(
 							"id" => $user_id
@@ -52,10 +52,10 @@ class VideoController extends Controller {
 					$video->setUpdatedAt($updatedAt);
 					$video->setUser($user);
 					//$video->setVideoPath($videoPath);
-					
+
 					$em->persist($video);
 					$em->flush();
-					
+
 					$video = $em->getRepository("BackendBundle:Video")->findOneBy(
 						array(
 							"user" => $user,
@@ -64,9 +64,9 @@ class VideoController extends Controller {
 							"createdAt" => $createdAt
 						)
 					);
-					
+
 					$data = array(
-						"status" => "Sucess",
+						"status" => "Success",
 						"code" => 200,
 						"data" => $video
 					);
@@ -76,7 +76,7 @@ class VideoController extends Controller {
 						"code" => 400,
 						"msg" => "Video not created!!"
 					);
-					
+
 				}
 			}else{
 				$data = array(
@@ -85,7 +85,7 @@ class VideoController extends Controller {
 					"msg" => "Video not created, params failed!!"
 				);
 			}
-			
+
 		}else{
 			$data = array(
 				"status" => "Error",
@@ -95,7 +95,7 @@ class VideoController extends Controller {
 		}
 		return $helpers->json($data);
 	}
-	
+
 	public function editAction(Request $request, $id = null) {
 		$helpers = $this->get("app.helpers");
 
@@ -104,9 +104,9 @@ class VideoController extends Controller {
 
 		if ($authCheck == true) {
 			$identity = $helpers->authCheck($hash, true);
-			
+
 			$json = $request->get("json", null);
-			
+
 			if($json != null){
 				$params = json_decode($json);
 
@@ -120,16 +120,16 @@ class VideoController extends Controller {
 				$title = (isset($params->title)) ? $params->title : null;
 				$description = (isset($params->description)) ? $params->description : null;
 				$status = (isset($params->status)) ? $params->status : null;
-				
+
 				if($user_id != null && $title != null){
 					$em = $this->getDoctrine()->getManager();
-					
+
 					$video = $em->getRepository("BackendBundle:Video")->findOneBy(
 						array(
 							"id" => $video_id
 						)
 					);
-					
+
 					if(isset($identity->sub) && $identity->sub == $video->getUser()->getId()){
 						$video->setDescription($description);
 						$video->setStatus($status);
@@ -140,7 +140,7 @@ class VideoController extends Controller {
 						$em->flush();
 
 						$data = array(
-							"status" => "Sucess",
+							"status" => "Success",
 							"code" => 200,
 							"msg" => "Video updated success !!"
 						);
@@ -157,7 +157,7 @@ class VideoController extends Controller {
 						"code" => 400,
 						"msg" => "Video not created!!"
 					);
-					
+
 				}
 			}else{
 				$data = array(
@@ -166,7 +166,7 @@ class VideoController extends Controller {
 					"msg" => "Video not created, params failed!!"
 				);
 			}
-			
+
 		}else{
 			$data = array(
 				"status" => "Error",
@@ -176,31 +176,31 @@ class VideoController extends Controller {
 		}
 		return $helpers->json($data);
 	}
-	
+
 	public function uploadAction(Request $request, $id = null) {
 		$helpers = $this->get("app.helpers");
 
 		$hash = $request->get("authorization", null);
 		$authCheck = $helpers->authCheck($hash);
-		
+
 		if ($authCheck == true) {
 			$identity = $helpers->authCheck($hash, true);
-			
+
 			$video_id = $id;
-			
+
 			$em = $this->getDoctrine()->getManager();
-					
+
 			$video = $em->getRepository("BackendBundle:Video")->findOneBy(
 				array(
 					"id" => $video_id
 				)
 			);
-			
+
 			if($video_id != null && isset($identity->sub) && $identity->sub == $video->getUser()->getId()){
-				
+
 				$file = $request->files->get('image', null);
 				$file_video = $request->files->get('video', null);
-				
+
 				if($file != null && !empty($file)){
 					$ext = $file->guessExtension();
 					if($ext == "jpeg" || $ext == "jpg" || $ext == "png"){
@@ -217,10 +217,10 @@ class VideoController extends Controller {
 						);
 					}
 				}else{
-					
+
 					if($file_video != null  && !empty($file_video)){
 						$ext = $file_video->guessExtension();
-						
+
 						if($ext == "mp4" || $ext == "avi" || $ext == "mp4"){
 							$file_name = time().".".$ext;
 							$path_of_file = "uploads/video_files/video_".$video_id;
@@ -228,7 +228,7 @@ class VideoController extends Controller {
 
 							$video->setVideoPath($file_name);
 						}
-						
+
 					}else{
 						$data = array(
 							"status" => "Error",
@@ -239,13 +239,13 @@ class VideoController extends Controller {
 				}
 				$em->persist($video);
 				$em->flush();
-				
+
 				$data = array(
-					"status" => "Sucess",
+					"status" => "Success",
 					"code" => 200,
 					"msg" => "Video updated success !!"
 				);
-				
+
 			}else{
 				$data = array(
 					"status" => "Error",
@@ -253,7 +253,7 @@ class VideoController extends Controller {
 					"msg" => "Video updated error, you not owner !!"
 				);
 			}
-			
+
 		}else{
 			$data = array(
 				"status" => "Error",
@@ -263,10 +263,10 @@ class VideoController extends Controller {
 		}
 		return $helpers->json($data);
 	}
-	
+
 	public function videosAction(Request $request) {
 		$helpers = $this->get("app.helpers");
-		
+
 		$em = $this->getDoctrine()->getManager();
 
 		$dql = "SELECT v FROM BackendBundle:Video v ORDER BY v.id DESC";
@@ -274,10 +274,10 @@ class VideoController extends Controller {
 		$page = $request->query->getInt("page", 1);
 		$paginator = $this->get("knp_paginator");
 		$items_per_page = 6;
-		
+
 		$pagination = $paginator->paginate($query, $page, $items_per_page);
 		$total_items_count = $pagination->getTotalItemCount();
-		
+
 		$data = array(
 			"status" => "Success",
 			"code" => 200,
@@ -287,28 +287,28 @@ class VideoController extends Controller {
 			"total_pages" => ceil($total_items_count / $items_per_page),
 			"data" => $pagination,
 		);
-		
+
 		return $helpers->json($data);
 	}
-	
+
 	public function lastVideosAction(Request $request) {
 		$helpers = $this->get("app.helpers");
-		
+
 		$em = $this->getDoctrine()->getManager();
 
 		$dql = "SELECT v FROM BackendBundle:Video v ORDER BY v.createdAt DESC";
 		$query = $em->createQuery($dql)->setMaxResults(4);
 		$videos = $query->getResult();
-		
+
 		$data = array(
 			"status" => "Success",
 			"code" => 200,
 			"data" => $videos,
 		);
-		
+
 		return $helpers->json($data);
 	}
-	
+
 	public function detailsAction(Request $request, $id = null) {
 		$helpers = $this->get("app.helpers");
 
@@ -328,7 +328,7 @@ class VideoController extends Controller {
 				"code" => 200,
 				"data" => $video,
 			);
-			
+
 		}else{
 			$data = array(
 				"status" => "Error",
@@ -336,13 +336,13 @@ class VideoController extends Controller {
 				"msg" => "Video not exist!!"
 			);
 		}
-		
+
 		return $helpers->json($data);
 	}
-	
+
 	public function searchAction(Request $request, $search = null) {
 		$helpers = $this->get("app.helpers");
-		
+
 		$em = $this->getDoctrine()->getManager();
 
 		if($search != null){
@@ -357,14 +357,14 @@ class VideoController extends Controller {
 			$dql = "SELECT v FROM BackendBundle:Video v ORDER BY v.id DESC";
 			$query = $em->createQuery($dql);
 		}
-		
+
 		$page = $request->query->getInt("page", 1);
 		$paginator = $this->get("knp_paginator");
 		$items_per_page = 6;
-		
+
 		$pagination = $paginator->paginate($query, $page, $items_per_page);
 		$total_items_count = $pagination->getTotalItemCount();
-		
+
 		$data = array(
 			"status" => "Success",
 			"code" => 200,
@@ -374,7 +374,7 @@ class VideoController extends Controller {
 			"total_pages" => ceil($total_items_count / $items_per_page),
 			"data" => $pagination,
 		);
-		
+
 		return $helpers->json($data);
 	}
 }
