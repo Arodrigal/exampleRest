@@ -7,19 +7,20 @@ import {User} from '../model/user';
 import {Video} from '../model/video';
 
 @Component({
-    selector: 'video-new',
-    templateUrl: 'app/view/video.new.html',
+    selector: 'video-edit',
+    templateUrl: 'app/view/video.edit.html',
     directives: [ROUTER_DIRECTIVES],
     providers: [LoginService, UploadService, VideoService]
 })
 
 // Clase del componente donde irán los datos y funcionalidades
-export class VideoNewComponent implements OnInit{
-  public titulo:string = "Crear un nuevo video";
+export class VideoEditComponent implements OnInit{
+  public titulo:string = "Modificar un video";
   public user: User;
   public video: Video;
   public errorMessage;
   public status;
+  public status_get_video;
   public uploadedImage = false;
 
   constructor(
@@ -33,23 +34,9 @@ export class VideoNewComponent implements OnInit{
   }
 
   ngOnInit(){
-    /*let identity = this._loginService.getIdentity();
-    this.identity = identity;
-
-    if(identity == null){
-      this._router.navigate(["/index"]);
-    }else{
-      this.user = new User(identity.sub,
-          identity.role,
-          identity.name,
-          identity.surname,
-          identity.email,
-          identity.password,
-          "null");
-    }*/
     this.video = new Video(1, "", "", "public", "null", "null", null, null);
     console.log("Componente de nuevo video");
-
+    this.getVideo();
 
   }
 
@@ -59,32 +46,61 @@ export class VideoNewComponent implements OnInit{
 
   onSubmit(){
 
+    this._route.params.subscribe(
+      params => {
+        let id = +params['id'];
+        let token = this._loginService.getToken();
 
-    let token = this._loginService.getToken();
+        this._videoService.update(token, this.video, id).subscribe(
+          response => {
+            this.status = response.status;
 
-    this._videoService.create(token, this.video).subscribe(
-      response => {
-        this.status = response.status;
+            if(this.status != "Success"){
+              this.status = "error";
+              console.log("Error:");
+              console.log(response);
+            }
 
-        if(this.status != "Success"){
-          this.status = "error";
-          console.log("Error:");
-          console.log(response);
-        }else{
-          this.video = response.data;
-          console.log(this.video);
 
+          },
+          error => {
+            this.errorMessage = <any>error;
+
+            if(this.errorMessage != null){
+              console.log(this.errorMessage);
+              alert("Error en la petición");
+            }
+          }
+        );
+    });
+  }
+
+  getVideo(){
+    this._route.params.subscribe(params => {
+      let id = params["id"];
+
+      this._videoService.getVideo(id).subscribe(
+        response => {
+          this.status_get_video = response.status;
+
+          if(this.status_get_video != "Success"){
+            this._router.navigate(["/index"]);
+          }else{
+            this.video = response.data;
+            console.log(this.video);
+
+          }
+        },
+        error => {
+          this.errorMessage = <any>error;
+
+          if(this.errorMessage != null){
+            console.log(this.errorMessage);
+            alert("Error en la petición");
+          }
         }
-      },
-      error => {
-        this.errorMessage = <any>error;
-
-        if(this.errorMessage != null){
-          console.log(this.errorMessage);
-          alert("Error en la petición");
-        }
-      }
-    );
+      );
+    });
   }
 
   public filesToUpload: Array<File>;

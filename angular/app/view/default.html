@@ -10,5 +10,60 @@
     <a [routerLink]="['/video-new']">crea un nuevo video</a>.
   </div>
 
-  <hr/>
+  <div class="all-videos">
+    <div class="loader" *ngIf="loading == 'show'">
+      <img src="assets/images/ajax-gray.gif" />
+    </div>
+
+    <ul id="videos-list" *ngIf="videos && loading == 'hide'">
+      <li *ngFor="let video of videos" class="videoItem col-md-4 pull-left">
+        <div class="video-image-thumb">
+          <img src="http://127.0.0.1:8888/cursoMS/symfony/web/uploads/video_files/video_{{video.id}}/{{video.image}}" *ngIf="video.image"/>
+        </div>
+        <div class="data">
+          Video de <strong><a [routerLink]="['/user', video.user.name]">{{video.user.name}}</a></strong>
+          <a [routerLink]="['/video', video.id]">{{video.title}}</a>
+          <p>{{video.description}}</p>
+          <div class="video-buttons" *ngIf="identity && identity != null && identity.sub == video.user.id">
+            <a [routerLink]="['/video-edit', video.id]" class="btn btn-primary">Editar</a>
+          </div>
+        </div>
+        <div class="clearfix"></div>
+      </li>
+    </ul>
+
+    <!-- Realizado por mi
+    <div *ngFor="let video of videos" class="videoItem col-md-12 pull-left">
+      <div class="panel panel-default video-data video-panel-{{video.id}}">
+        <div class="panel-heading">
+          <h3 class="panel-title">
+            Video de <strong>{{video.user.name}}</strong>
+          </h3>
+        </div>
+        <div class="panel-body">
+
+        </div>
+
+        <div class="clearfix"></div>
+      </div>
+    </div>-->
+  </div>
+  <div class="clearfix"></div>
+
+<ul class="pagination">
+  <li>
+    <a [routerLink]="['/index', pagePrev]" aria-label="Previous">
+      <span aria-hidden="true">&laquo;</span>
+    </a>
+  </li>
+  <li *ngFor="let page of pages">
+    <a [routerLink]="['/index', page + 1]">{{page + 1}}</a>
+  </li>
+  <li>
+    <a [routerLink]="['/index', pageNext]" aria-label="Next">
+      <span aria-hidden="true">&raquo;</span>
+    </a>
+  </li>
+</ul>
+
 </div>

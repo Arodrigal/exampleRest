@@ -14,61 +14,69 @@ var login_service_1 = require('../services/login.service');
 var upload_service_1 = require('../services/upload.service');
 var video_service_1 = require('../services/video.service');
 var video_1 = require('../model/video');
-var VideoNewComponent = (function () {
-    function VideoNewComponent(_loginService, _uploadService, _videoService, _route, _router) {
+var VideoEditComponent = (function () {
+    function VideoEditComponent(_loginService, _uploadService, _videoService, _route, _router) {
         this._loginService = _loginService;
         this._uploadService = _uploadService;
         this._videoService = _videoService;
         this._route = _route;
         this._router = _router;
-        this.titulo = "Crear un nuevo video";
+        this.titulo = "Modificar un video";
         this.uploadedImage = false;
         this.uploadedImage = false;
     }
-    VideoNewComponent.prototype.ngOnInit = function () {
-        /*let identity = this._loginService.getIdentity();
-        this.identity = identity;
-    
-        if(identity == null){
-          this._router.navigate(["/index"]);
-        }else{
-          this.user = new User(identity.sub,
-              identity.role,
-              identity.name,
-              identity.surname,
-              identity.email,
-              identity.password,
-              "null");
-        }*/
+    VideoEditComponent.prototype.ngOnInit = function () {
         this.video = new video_1.Video(1, "", "", "public", "null", "null", null, null);
         console.log("Componente de nuevo video");
+        this.getVideo();
     };
-    VideoNewComponent.prototype.callVideoStatus = function (value) {
+    VideoEditComponent.prototype.callVideoStatus = function (value) {
         this.video.status = value;
     };
-    VideoNewComponent.prototype.onSubmit = function () {
+    VideoEditComponent.prototype.onSubmit = function () {
         var _this = this;
-        var token = this._loginService.getToken();
-        this._videoService.create(token, this.video).subscribe(function (response) {
-            _this.status = response.status;
-            if (_this.status != "Success") {
-                _this.status = "error";
-                console.log("Error:");
-                console.log(response);
-            }
-            else {
-                _this.video = response.data;
-                console.log(_this.video);
-            }
-        }, function (error) {
-            _this.errorMessage = error;
-            if (_this.errorMessage != null) {
-                console.log(_this.errorMessage);
-                alert("Error en la petición");
-            }
+        this._route.params.subscribe(function (params) {
+            var id = +params['id'];
+            var token = _this._loginService.getToken();
+            _this._videoService.update(token, _this.video, id).subscribe(function (response) {
+                _this.status = response.status;
+                if (_this.status != "Success") {
+                    _this.status = "error";
+                    console.log("Error:");
+                    console.log(response);
+                }
+            }, function (error) {
+                _this.errorMessage = error;
+                if (_this.errorMessage != null) {
+                    console.log(_this.errorMessage);
+                    alert("Error en la petición");
+                }
+            });
         });
     };
-    VideoNewComponent.prototype.fileChangeEventImage = function (fileInput) {
+    VideoEditComponent.prototype.getVideo = function () {
+        var _this = this;
+        this._route.params.subscribe(function (params) {
+            var id = params["id"];
+            _this._videoService.getVideo(id).subscribe(function (response) {
+                _this.status_get_video = response.status;
+                if (_this.status_get_video != "Success") {
+                    _this._router.navigate(["/index"]);
+                }
+                else {
+                    _this.video = response.data;
+                    console.log(_this.video);
+                }
+            }, function (error) {
+                _this.errorMessage = error;
+                if (_this.errorMessage != null) {
+                    console.log(_this.errorMessage);
+                    alert("Error en la petición");
+                }
+            });
+        });
+    };
+    VideoEditComponent.prototype.fileChangeEventImage = function (fileInput) {
         var _this = this;
         this.filesToUpload = fileInput.target.files;
         var token = this._loginService.getToken();
@@ -82,12 +90,12 @@ var VideoNewComponent = (function () {
             console.log(error);
         });
     };
-    VideoNewComponent.prototype.nextUploadVideo = function () {
+    VideoEditComponent.prototype.nextUploadVideo = function () {
         console.log("Cambiado estado del uploadedImage");
         this.uploadedImage = true;
         console.log("Comprobacion ('+this.status+') ('+this.uploadedImage+')");
     };
-    VideoNewComponent.prototype.fileChangeEventVideo = function (fileInput) {
+    VideoEditComponent.prototype.fileChangeEventVideo = function (fileInput) {
         var _this = this;
         this.filesToUpload = fileInput.target.files;
         var token = this._loginService.getToken();
@@ -101,19 +109,19 @@ var VideoNewComponent = (function () {
             console.log(error);
         });
     };
-    VideoNewComponent.prototype.redirectToVideo = function () {
+    VideoEditComponent.prototype.redirectToVideo = function () {
         this._router.navigate(['/video', this.video.id]);
     };
-    VideoNewComponent = __decorate([
+    VideoEditComponent = __decorate([
         core_1.Component({
-            selector: 'video-new',
-            templateUrl: 'app/view/video.new.html',
+            selector: 'video-edit',
+            templateUrl: 'app/view/video.edit.html',
             directives: [router_1.ROUTER_DIRECTIVES],
             providers: [login_service_1.LoginService, upload_service_1.UploadService, video_service_1.VideoService]
         }), 
         __metadata('design:paramtypes', [login_service_1.LoginService, upload_service_1.UploadService, video_service_1.VideoService, router_1.ActivatedRoute, router_1.Router])
-    ], VideoNewComponent);
-    return VideoNewComponent;
+    ], VideoEditComponent);
+    return VideoEditComponent;
 }());
-exports.VideoNewComponent = VideoNewComponent;
-//# sourceMappingURL=video.new.component.js.map
+exports.VideoEditComponent = VideoEditComponent;
+//# sourceMappingURL=video.edit.component.js.map

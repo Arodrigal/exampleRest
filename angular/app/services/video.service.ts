@@ -21,4 +21,30 @@ export class VideoService{
     return this._http.post(this.url+"/video/new", params, {headers: headers})
         .map(res => res.json());
   }
+
+  update(token, video, id){
+    let json = JSON.stringify(video);
+    let params = "json="+json+"&authorization="+token;
+    let headers = new Headers({'Content-Type':'application/x-www-form-urlencoded'});
+
+    return this._http.post(this.url+"/video/edit/"+ id, params, {headers: headers})
+        .map(res => res.json());
+  }
+
+  getVideo(id){
+    return this._http.get(this.url+"/video/details/"+id).map(res => res.json());
+  }
+
+  getLastVideos(){
+    return this._http.get(this.url+"/video/last-videos").map(res => res.json());
+  }
+
+  getVideos(page = null){
+    if(page == null){
+      page = 1;
+    }
+
+    return this._http.get(this.url+"/video/list?page="+page).map(res => res.json());
+    //return this._http.get(this.url+"/video/list").map(res => res.json());
+  }
 }

@@ -11,45 +11,33 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 var core_1 = require("@angular/core");
 var http_1 = require("@angular/http");
 require("rxjs/add/operator/map");
-var VideoService = (function () {
-    function VideoService(_http) {
+var CommentService = (function () {
+    function CommentService(_http) {
         this._http = _http;
         //public url = "http://localhost/cursoMS/symfony/web/app_dev.php";
         this.url = "http://127.0.0.1:8888/cursoMS/symfony/web/app_dev.php";
     }
-    VideoService.prototype.create = function (token, video) {
-        var json = JSON.stringify(video);
+    CommentService.prototype.create = function (token, comment) {
+        var json = JSON.stringify(comment);
         var params = "json=" + json + "&authorization=" + token;
         var headers = new http_1.Headers({ 'Content-Type': 'application/x-www-form-urlencoded' });
-        return this._http.post(this.url + "/video/new", params, { headers: headers })
+        return this._http.post(this.url + "/comment/new", params, { headers: headers })
             .map(function (res) { return res.json(); });
     };
-    VideoService.prototype.update = function (token, video, id) {
-        var json = JSON.stringify(video);
-        var params = "json=" + json + "&authorization=" + token;
+    CommentService.prototype.getComments = function (id) {
+        return this._http.get(this.url + "/comment/list/" + id).map(function (res) { return res.json(); });
+    };
+    CommentService.prototype.deleteComment = function (token, id) {
+        var params = "&authorization=" + token;
         var headers = new http_1.Headers({ 'Content-Type': 'application/x-www-form-urlencoded' });
-        return this._http.post(this.url + "/video/edit/" + id, params, { headers: headers })
+        return this._http.post(this.url + "/comment/delete/" + id, params, { headers: headers })
             .map(function (res) { return res.json(); });
     };
-    VideoService.prototype.getVideo = function (id) {
-        return this._http.get(this.url + "/video/details/" + id).map(function (res) { return res.json(); });
-    };
-    VideoService.prototype.getLastVideos = function () {
-        return this._http.get(this.url + "/video/last-videos").map(function (res) { return res.json(); });
-    };
-    VideoService.prototype.getVideos = function (page) {
-        if (page === void 0) { page = null; }
-        if (page == null) {
-            page = 1;
-        }
-        return this._http.get(this.url + "/video/list?page=" + page).map(function (res) { return res.json(); });
-        //return this._http.get(this.url+"/video/list").map(res => res.json());
-    };
-    VideoService = __decorate([
+    CommentService = __decorate([
         core_1.Injectable(), 
         __metadata('design:paramtypes', [http_1.Http])
-    ], VideoService);
-    return VideoService;
+    ], CommentService);
+    return CommentService;
 }());
-exports.VideoService = VideoService;
-//# sourceMappingURL=video.service.js.map
+exports.CommentService = CommentService;
+//# sourceMappingURL=comment.service.js.map

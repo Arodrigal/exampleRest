@@ -11,23 +11,71 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 var core_1 = require('@angular/core');
 var router_1 = require("@angular/router");
 var login_service_1 = require("../services/login.service");
+var video_service_1 = require("../services/video.service");
 var DefaultComponent = (function () {
-    function DefaultComponent(_loginService) {
+    function DefaultComponent(_loginService, _videoService, _route) {
         this._loginService = _loginService;
+        this._videoService = _videoService;
+        this._route = _route;
         this.titulo = "Portada";
+        this.pagePrev = 1;
+        this.pageNext = 1;
     }
     DefaultComponent.prototype.ngOnInit = function () {
         this.identity = this._loginService.getIdentity();
-        console.log(this.identity);
+        this.getAllVideos();
+    };
+    DefaultComponent.prototype.getAllVideos = function () {
+        var _this = this;
+        this.loading = "show";
+        this._route.params.subscribe(function (params) {
+            var page = +params["page"];
+            if (!page) {
+                page = 1;
+            }
+            _this._videoService.getVideos(page).subscribe(function (response) {
+                _this.status = response.status;
+                if (_this.status != "Success") {
+                    _this.status = "Error";
+                }
+                else {
+                    _this.videos = response.data;
+                    console.log(_this.videos);
+                    _this.pages = [];
+                    for (var i = 0; i < response.total_pages; i++) {
+                        _this.pages.push(i);
+                    }
+                    if (page > 1) {
+                        _this.pagePrev = (page - 1);
+                    }
+                    else {
+                        _this.pagePrev = page;
+                    }
+                    if (page < response.total_pages || page == 1) {
+                        _this.pageNext = (page + 1);
+                    }
+                    else {
+                        _this.pageNext = page;
+                    }
+                }
+                _this.loading = "hide";
+            }, function (error) {
+                _this.errorMessage = error;
+                if (_this.errorMessage != null) {
+                    console.log(_this.errorMessage);
+                    alert("Error en la petición");
+                }
+            });
+        });
     };
     DefaultComponent = __decorate([
         core_1.Component({
             selector: 'default',
             templateUrl: 'app/view/default.html',
             directives: [router_1.ROUTER_DIRECTIVES],
-            providers: [login_service_1.LoginService]
+            providers: [login_service_1.LoginService, video_service_1.VideoService]
         }), 
-        __metadata('design:paramtypes', [login_service_1.LoginService])
+        __metadata('design:paramtypes', [login_service_1.LoginService, video_service_1.VideoService, router_1.ActivatedRoute])
     ], DefaultComponent);
     return DefaultComponent;
 }());
