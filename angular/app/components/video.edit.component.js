@@ -26,12 +26,16 @@ var VideoEditComponent = (function () {
         this.uploadedImage = false;
     }
     VideoEditComponent.prototype.ngOnInit = function () {
-        this.video = new video_1.Video(1, "", "", "public", "null", "null", null, null);
+        this.identity = this._loginService.getIdentity();
         console.log("Componente de nuevo video");
+        this.video = new video_1.Video(1, "", "", "public", "null", "null", null, null, this.identity.sub);
         this.getVideo();
     };
     VideoEditComponent.prototype.callVideoStatus = function (value) {
         this.video.status = value;
+    };
+    VideoEditComponent.prototype.setChangeUpload = function (value) {
+        this.changeUpload = value;
     };
     VideoEditComponent.prototype.onSubmit = function () {
         var _this = this;
@@ -58,6 +62,7 @@ var VideoEditComponent = (function () {
         var _this = this;
         this._route.params.subscribe(function (params) {
             var id = params["id"];
+            _this.loading = "show";
             _this._videoService.getVideo(id).subscribe(function (response) {
                 _this.status_get_video = response.status;
                 if (_this.status_get_video != "Success") {
@@ -65,7 +70,14 @@ var VideoEditComponent = (function () {
                 }
                 else {
                     _this.video = response.data;
-                    console.log(_this.video);
+                    if (_this.identity && _this.identity != null && _this.identity.sub == _this.video.user.id) {
+                        console.log(_this.video);
+                    }
+                    else {
+                        console.error("No tienes permisos para editar este video");
+                        _this._router.navigate(["/index"]);
+                    }
+                    _this.loading = "hide";
                 }
             }, function (error) {
                 _this.errorMessage = error;

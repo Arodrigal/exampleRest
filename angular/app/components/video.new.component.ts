@@ -21,6 +21,7 @@ export class VideoNewComponent implements OnInit{
   public errorMessage;
   public status;
   public uploadedImage = false;
+  public identity;
 
   constructor(
     private _loginService: LoginService,
@@ -33,24 +34,14 @@ export class VideoNewComponent implements OnInit{
   }
 
   ngOnInit(){
-    /*let identity = this._loginService.getIdentity();
-    this.identity = identity;
+    this.identity = this._loginService.getIdentity();
 
-    if(identity == null){
+    if(this.identity == null){
       this._router.navigate(["/index"]);
     }else{
-      this.user = new User(identity.sub,
-          identity.role,
-          identity.name,
-          identity.surname,
-          identity.email,
-          identity.password,
-          "null");
-    }*/
-    this.video = new Video(1, "", "", "public", "null", "null", null, null);
-    console.log("Componente de nuevo video");
-
-
+      this.video = new Video(1, "", "", "public", "null", "null", null, null, this.identity.sub);
+      console.log("Componente de nuevo video");
+    }
   }
 
   callVideoStatus(value){

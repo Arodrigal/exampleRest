@@ -15,13 +15,24 @@ import {LoginService} from './services/login.service';
 export class AppComponent {
   public identity;
   public token;
+  public searchString;
 
   constructor(
-    private _loginService: LoginService
+    private _loginService: LoginService,
+    private _route: ActivatedRoute,
+    private _router: Router
   ){}
 
   ngOnInit(){
     this.identity = this._loginService.getIdentity();
     this.token = this._loginService.getToken();
+  }
+
+  search(){
+    if(this.searchString != null){
+      this._router.navigate(["/search", this.searchString]);
+    }else{
+      this._router.navigate(["/index"]);
+    }
   }
 }

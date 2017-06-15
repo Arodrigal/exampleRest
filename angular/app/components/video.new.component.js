@@ -26,22 +26,14 @@ var VideoNewComponent = (function () {
         this.uploadedImage = false;
     }
     VideoNewComponent.prototype.ngOnInit = function () {
-        /*let identity = this._loginService.getIdentity();
-        this.identity = identity;
-    
-        if(identity == null){
-          this._router.navigate(["/index"]);
-        }else{
-          this.user = new User(identity.sub,
-              identity.role,
-              identity.name,
-              identity.surname,
-              identity.email,
-              identity.password,
-              "null");
-        }*/
-        this.video = new video_1.Video(1, "", "", "public", "null", "null", null, null);
-        console.log("Componente de nuevo video");
+        this.identity = this._loginService.getIdentity();
+        if (this.identity == null) {
+            this._router.navigate(["/index"]);
+        }
+        else {
+            this.video = new video_1.Video(1, "", "", "public", "null", "null", null, null, this.identity.sub);
+            console.log("Componente de nuevo video");
+        }
     };
     VideoNewComponent.prototype.callVideoStatus = function (value) {
         this.video.status = value;

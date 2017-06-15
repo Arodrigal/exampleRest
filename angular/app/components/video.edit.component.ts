@@ -22,6 +22,9 @@ export class VideoEditComponent implements OnInit{
   public status;
   public status_get_video;
   public uploadedImage = false;
+  public changeUpload;
+  public identity;
+  public loading;
 
   constructor(
     private _loginService: LoginService,
@@ -34,14 +37,18 @@ export class VideoEditComponent implements OnInit{
   }
 
   ngOnInit(){
-    this.video = new Video(1, "", "", "public", "null", "null", null, null);
+    this.identity = this._loginService.getIdentity();
     console.log("Componente de nuevo video");
+    this.video = new Video(1, "", "", "public", "null", "null", null, null, this.identity.sub);
     this.getVideo();
-
   }
 
   callVideoStatus(value){
     this.video.status = value;
+  }
+
+  setChangeUpload(value:string){
+    this.changeUpload = value;
   }
 
   onSubmit(){
@@ -79,6 +86,8 @@ export class VideoEditComponent implements OnInit{
     this._route.params.subscribe(params => {
       let id = params["id"];
 
+      this.loading = "show";
+
       this._videoService.getVideo(id).subscribe(
         response => {
           this.status_get_video = response.status;
@@ -87,7 +96,14 @@ export class VideoEditComponent implements OnInit{
             this._router.navigate(["/index"]);
           }else{
             this.video = response.data;
-            console.log(this.video);
+
+            if(this.identity && this.identity != null && this.identity.sub == this.video.user.id){
+              console.log(this.video);
+            }else{
+              console.error("No tienes permisos para editar este video");
+              this._router.navigate(["/index"]);
+            }
+            this.loading = "hide";
 
           }
         },

@@ -1,6 +1,6 @@
 "use strict";
 var Video = (function () {
-    function Video(id, titulo, description, status, image, videoPath, createdAt, updatedAt) {
+    function Video(id, titulo, description, status, image, videoPath, createdAt, updatedAt, user) {
         this.id = id;
         this.titulo = titulo;
         this.description = description;
@@ -9,6 +9,7 @@ var Video = (function () {
         this.videoPath = videoPath;
         this.createdAt = createdAt;
         this.updatedAt = updatedAt;
+        this.user = user;
     }
     return Video;
 }());

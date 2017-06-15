@@ -45,6 +45,28 @@ var VideoService = (function () {
         return this._http.get(this.url + "/video/list?page=" + page).map(function (res) { return res.json(); });
         //return this._http.get(this.url+"/video/list").map(res => res.json());
     };
+    VideoService.prototype.search = function (search, page) {
+        if (search === void 0) { search = null; }
+        if (page === void 0) { page = null; }
+        if (page == null) {
+            page = 1;
+        }
+        var http;
+        if (search == null) {
+            http = this._http.get(this.url + "/video/list?page=" + page).map(function (res) { return res.json(); });
+        }
+        else {
+            http = this._http.get(this.url + "/video/search/" + search + "?page=" + page).map(function (res) { return res.json(); });
+        }
+        return http;
+    };
+    VideoService.prototype.getChannel = function (user, page) {
+        if (page === void 0) { page = null; }
+        if (page == null) {
+            page = 1;
+        }
+        return this._http.get(this.url + "/user/channel/" + user + "?page=" + page).map(function (res) { return res.json(); });
+    };
     VideoService = __decorate([
         core_1.Injectable(), 
         __metadata('design:paramtypes', [http_1.Http])

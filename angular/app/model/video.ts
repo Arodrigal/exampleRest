@@ -7,6 +7,7 @@ export class Video{
 		public image:string,
 		public videoPath,
 		public createdAt,
-		public updatedAt
+		public updatedAt,
+		public user
 	){}
 }

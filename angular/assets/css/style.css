@@ -91,7 +91,7 @@
 
 .video-image-thumb img{
   width: 100%;
-  margin-top: -45px;
+  margin-top: -27px;
 }
 
 .videoItem .data{
@@ -102,3 +102,23 @@
   height: 130px;
 }
 /* FIN Listado de videos en Home */
+
+/* Canal del usuario */
+.channel-head{
+  text_align: center;
+}
+
+.image-channel{
+  width: 150px;
+  height: 150px;
+  border-radius: 500px;
+  overflow: hidden;
+  margin: 0px auto;
+  background: #ddd;
+}
+
+.image-channel img{
+  height: 150px;
+}
+
+/* FIN Canal del usuario */

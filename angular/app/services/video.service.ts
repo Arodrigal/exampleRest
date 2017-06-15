@@ -47,4 +47,27 @@ export class VideoService{
     return this._http.get(this.url+"/video/list?page="+page).map(res => res.json());
     //return this._http.get(this.url+"/video/list").map(res => res.json());
   }
+
+  search(search = null, page = null){
+    if(page == null){
+      page = 1;
+    }
+
+    let http: any;
+    if(search == null){
+      http = this._http.get(this.url+"/video/list?page="+page).map(res => res.json());
+    }else{
+      http = this._http.get(this.url+"/video/search/"+search+"?page="+page).map(res => res.json());
+    }
+
+    return http;
+  }
+
+  getChannel(user, page = null){
+    if(page == null){
+      page = 1;
+    }
+
+      return this._http.get(this.url+"/user/channel/"+user+"?page="+page).map(res => res.json());
+  }
 }

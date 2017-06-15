@@ -1,6 +1,6 @@
 <div class="col-md-12">
   <hr/>
-  <h1>{{titulo}}</h1>
+  <h1>{{titulo}} de {{ searchString }}</h1>
 
   <div *ngIf="!identity || identity == null">
     Inicia sesión para acceder a más opciones...
@@ -21,7 +21,7 @@
           <img src="http://127.0.0.1:8888/cursoMS/symfony/web/uploads/video_files/video_{{video.id}}/{{video.image}}" *ngIf="video.image"/>
         </div>
         <div class="data">
-          Video de <strong><a [routerLink]="['/channel', video.user.id]">{{video.user.name}}</a></strong>
+          Video de <strong><a [routerLink]="['/user', video.user.name]">{{video.user.name}}</a></strong>
           <a [routerLink]="['/video', video.id]">{{video.title}}</a>
           <p>{{video.description}}</p>
           <div class="video-buttons" *ngIf="identity && identity != null && identity.sub == video.user.id">
@@ -31,36 +31,20 @@
         <div class="clearfix"></div>
       </li>
     </ul>
-
-    <!-- Realizado por mi
-    <div *ngFor="let video of videos" class="videoItem col-md-12 pull-left">
-      <div class="panel panel-default video-data video-panel-{{video.id}}">
-        <div class="panel-heading">
-          <h3 class="panel-title">
-            Video de <strong>{{video.user.name}}</strong>
-          </h3>
-        </div>
-        <div class="panel-body">
-
-        </div>
-
-        <div class="clearfix"></div>
-      </div>
-    </div>-->
   </div>
   <div class="clearfix"></div>
 
-<ul class="pagination">
+<ul class="pagination" *ngIf="searchString">
   <li>
-    <a [routerLink]="['/index', pagePrev]" aria-label="Previous">
+    <a [routerLink]="['/search', searchString, pagePrev]" aria-label="Previous">
       <span aria-hidden="true">&laquo;</span>
     </a>
   </li>
   <li *ngFor="let page of pages">
-    <a [routerLink]="['/index', page + 1]">{{page + 1}}</a>
+    <a [routerLink]="['/search', searchString, page + 1]">{{page + 1}}</a>
   </li>
   <li>
-    <a [routerLink]="['/index', pageNext]" aria-label="Next">
+    <a [routerLink]="['/search', searchString, pageNext]" aria-label="Next">
       <span aria-hidden="true">&raquo;</span>
     </a>
   </li>
